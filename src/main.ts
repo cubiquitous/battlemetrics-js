@@ -1,9 +1,12 @@
+import Helpers from "./components/helpers.js";
 import "dotenv/config";
+
 export default class BattleMetrics {
   private baseURL: string;
   private apiKey: string | undefined;
   private headers: { Authorization: string };
   private responseData: null;
+  private helpers: Helpers;
 
   public constructor(apiKey: string | undefined) {
     if (typeof apiKey !== "string") {
@@ -14,6 +17,7 @@ export default class BattleMetrics {
     this.apiKey = apiKey;
     this.headers = { Authorization: `Bearer ${this.apiKey}` };
     this.responseData = null;
+    this.helpers = new Helpers(this.headers, this.baseURL);
   }
 }
 
