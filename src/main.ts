@@ -1,4 +1,6 @@
 import Helpers from "./components/helpers.js";
+import Player from "./components/players.js";
+
 import "dotenv/config";
 
 export default class BattleMetrics {
@@ -7,6 +9,7 @@ export default class BattleMetrics {
   private headers: { Authorization: string };
   private responseData: null;
   private helpers: Helpers;
+  private player: Player;
 
   public constructor(apiKey: string | undefined) {
     if (typeof apiKey !== "string") {
@@ -18,6 +21,7 @@ export default class BattleMetrics {
     this.headers = { Authorization: `Bearer ${this.apiKey}` };
     this.responseData = null;
     this.helpers = new Helpers(this.headers, this.baseURL);
+    this.player = new Player(this.helpers, this.baseURL);
   }
 }
 
