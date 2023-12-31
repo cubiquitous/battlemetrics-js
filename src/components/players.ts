@@ -32,12 +32,15 @@ export default class Player implements Iplayer {
 
     if (!startTime) {
       startTime = new Date(
-        new Date().getTime() - 1 * 24 * 60 * 60 * 1000
+        new Date().getTime() - 1 * 24 * 60 * 60 * 1000 // 1 day in milliseconds;
       ).toISOString();
     }
+
     if (!endTime) {
       endTime = new Date().toISOString();
     }
+
+    const path = `/servers/${serverId}/player-count-history`;
 
     const params = new URLSearchParams({
       start: startTime,
@@ -48,7 +51,8 @@ export default class Player implements Iplayer {
     return await this.helpers.makeRequest({
       method: "GET",
       path,
-      data: JSON.stringify(data),
+      params,
     });
+  }
   }
 }
