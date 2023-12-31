@@ -39,12 +39,11 @@ export default class Player implements Iplayer {
       endTime = new Date().toISOString();
     }
 
-    let path = `/servers/${serverId}/player-count-history`;
-    let data = {
+    const params = new URLSearchParams({
       start: startTime,
-      end: endTime,
+      stop: endTime,
       resolution,
-    };
+    });
 
     return await this.helpers.makeRequest({
       method: "GET",
