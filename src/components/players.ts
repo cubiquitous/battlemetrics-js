@@ -4,7 +4,7 @@ type countHistory = {
   serverId: number;
   startTime?: string;
   endTime?: string;
-  resolution: string;
+  resolution?: string;
 };
 
 interface Iplayer {
@@ -23,7 +23,7 @@ export default class Player implements Iplayer {
     serverId,
     startTime,
     endTime,
-    resolution,
+    resolution = "raw",
   }: countHistory) {
     /** Player Count History
         Documentation: https://www.battlemetrics.com/developers/documentation#link-GET-server-/servers/{(%23%2Fdefinitions%2Fserver%2Fdefinitions%2Fidentity)}/player-count-history
