@@ -1,3 +1,5 @@
+import { URL } from "url";
+
 declare type Method = "GET" | "POST" | "PATCH" | "UPDATE" | "DELETE";
 
 type Header = { Authorization: string };
@@ -6,14 +8,14 @@ interface IDataRequest {
   method: Method;
   path: string;
   data: string;
-  params?: string;
+  params?: URLSearchParams;
 }
 
 interface IParamRequest {
   method: Method;
   path: string;
   data?: string;
-  params: string;
+  params: URLSearchParams;
 }
 
 type IRequest = IDataRequest | IParamRequest;
@@ -26,19 +28,21 @@ export default class Helpers {
       headers: this.headers,
       method,
     };
+    let url: URL;
 
     if (["POST", "PATCH"].includes(method)) {
+      url = new URL(this.baseURL);
       requestOptions.body = data;
       requestOptions.headers = {
         ...requestOptions.headers,
         "Content-Type": "application/json",
       };
     } else {
-      path += "?" + params;
+      url = new URL(path, this.baseURL);
+      url.search = params!.toString();
     }
 
-    const response = await fetch(this.baseURL + path, requestOptions);
-
+    const response = await fetch(url, requestOptions);
     if (response.status === 429) {
       throw new Error(
         "You're being rate limited by the API. Please wait a minute before trying again."
