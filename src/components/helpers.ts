@@ -1,3 +1,4 @@
+import { log } from "console";
 import { URL } from "url";
 
 declare type Method = "GET" | "POST" | "PATCH" | "UPDATE" | "DELETE";
@@ -23,7 +24,7 @@ type IRequest = IDataRequest | IParamRequest;
 export default class Helpers {
   public constructor(private headers: Header, private baseURL: string) {}
 
-  async makeRequest({ method, path, params, data }: IRequest) {
+  async makeRequest<T>({ method, path, params, data }: IRequest): Promise<T> {
     const requestOptions: RequestInit = {
       headers: this.headers,
       method,
@@ -39,7 +40,7 @@ export default class Helpers {
       };
     } else {
       url = new URL(path, this.baseURL);
-      url.search = params!.toString();
+      if (params) url.search = params!.toString();
     }
 
     const response = await fetch(url, requestOptions);
@@ -48,7 +49,12 @@ export default class Helpers {
         "You're being rate limited by the API. Please wait a minute before trying again."
       );
     }
+    // const contentType = response.headers.get("content-type");
+    // console.log({contentType})
+    //   log(response);
+    // if(contentType?.includes(""))
+    const res: T = await response.json();
 
-    return await response.json();
+    return res;
   }
 }
