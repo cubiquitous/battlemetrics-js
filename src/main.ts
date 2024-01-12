@@ -23,5 +23,4 @@ export default class BattleMetrics {
   }
 }
 
-
 // console.dir(myObject, { depth: null });
