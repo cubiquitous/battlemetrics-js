@@ -9,27 +9,20 @@ type countHistory = {
 };
 
 interface Iplayer {
-  countHistory: ({
-    serverId,
-    startTime,
-    endTime,
-    resolution,
-  }: countHistory) => Promise<any>;
+  countHistory: (props: countHistory) => Promise<CountDataPoint[]>;
 }
 
 export default class Player implements Iplayer {
   public constructor(private helpers: Helpers, private baseUrl: string) {}
 
-  async countHistory({
-    serverId,
-    startTime,
-    endTime,
-    resolution = "raw",
-  }: countHistory): Promise<CountDataPoint[]> {
+  public async countHistory(
+    countHistoryobj: countHistory
+  ): Promise<CountDataPoint[]> {
     /** Player Count History
         Documentation: https://www.battlemetrics.com/developers/documentation#link-GET-server-/servers/{(%23%2Fdefinitions%2Fserver%2Fdefinitions%2Fidentity)}/player-count-history
         Returns an Array filled with Datapoints of the player count history.
     */
+    let { serverId, startTime, endTime, resolution = "raw" } = countHistoryobj;
 
     if (!startTime) {
       startTime = new Date(
@@ -49,16 +42,13 @@ export default class Player implements Iplayer {
       resolution,
     });
 
-    const res = await this.helpers.makeRequest<{ data: [CountDataPoint] }>({
+    const res = await this.helpers.makeRequest<{ data: CountDataPoint[] }>({
       method: "GET",
       path,
       params,
     });
 
-    return res.data.map((i) => {
-      console.log(i);
-      return i;
-    });
+    return res.data;
   }
 
   async identifiers(playerID: number): Promise<any> {
