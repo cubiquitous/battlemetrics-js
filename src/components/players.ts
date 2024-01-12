@@ -15,9 +15,19 @@ type countHistory = {
 type SearchPlayerResponse = GenericAPIResponse<RelatedIdentifier[]>;
 type IdentifiersResponse = GenericAPIResponse<Player>;
 
+type ISearchOptions = {
+  search?: string;
+  filterGame?: string;
+  filterOnline?: boolean;
+  filterServers?: number;
+  filterOrganization?: number;
+  filterPublic?: boolean;
+  flag?: string;
+};
 
 interface Iplayer {
   countHistory: (props: countHistory) => Promise<CountDataPoint[]>;
+  search: (options: ISearchOptions) =>  Promise<SearchPlayerResponse>;
 }
 
 export default class Player implements Iplayer {
@@ -81,7 +91,44 @@ export default class Player implements Iplayer {
     return res;
   }
 
+  public async search(
+    options: ISearchOptions = {}
+  ): Promise<SearchPlayerResponse> {
+    const {
+      search,
+      filterServers,
+      filterOrganization,
+      filterPublic,
+      flag,
+      filterOnline,
+      filterGame,
+    } = options;
 
-    return await this.helpers.makeRequest({ method: "GET", path, data });
+    const data: any = {
+      "page[size]": "100",
+      include: "server,identifier,playerFlag,flagPlayer",
+    };
+
+    if (search) data["filter[search]"] = search;
+    if (filterServers) data["filter[server]"] = filterServers;
+    if (filterOrganization) data["filter[organization]"] = filterOrganization;
+    if (flag) data["filter[playerFlags]"] = flag;
+
+    data["filter[online]"] = filterOnline ? "true" : "false";
+    data["filter[public]"] = filterPublic ? "true" : "false";
+
+    if (filterGame) {
+      // Assuming you need to set game on server object (based on the original code)
+      // This part may need adjustment depending on the actual structure of the request.
+      data.server = {
+        game: filterGame,
+      };
+    }
+
+    return await this.helpers.makeRequest<SearchPlayerResponse>({
+      method: "GET",
+      path: "/players",
+      data: data.toString(),
+    });
   }
 }
