@@ -1,5 +1,9 @@
-import { CountDataPoint } from "../../types/battlemetrics/player.js";
-import Helpers from "./helpers.js";
+import {
+  GenericAPIResponse,
+  DataPoint,
+} from "../../types/battlemetrics/battlemetricsTypes.ts";
+import { CountDataPoint } from "../../types/battlemetrics/playerTypes.ts";
+import { RelatedIdentifier } from "../../types/battlemetrics/relatedIdentifier.ts";
 
 type countHistory = {
   serverId: number;
@@ -7,6 +11,10 @@ type countHistory = {
   endTime?: string;
   resolution?: string;
 };
+
+type SearchPlayerResponse = GenericAPIResponse<RelatedIdentifier[]>;
+type IdentifiersResponse = GenericAPIResponse<Player>;
+
 
 interface Iplayer {
   countHistory: (props: countHistory) => Promise<CountDataPoint[]>;
@@ -51,7 +59,7 @@ export default class Player implements Iplayer {
     return res.data;
   }
 
-  async identifiers(playerID: number): Promise<any> {
+  public async identifiers(playerID: number): Promise<IdentifiersResponse> {
     /** Get player identifiers and related players and identifiers.
         Documentation: https://www.battlemetrics.com/developers/documentation#link-GET-relatedIdentifier-/players/{(%23%2Fdefinitions%2Fplayer%2Fdefinitions%2Fidentity)}/relationships/related-identifiers
         Args:
@@ -65,6 +73,14 @@ export default class Player implements Iplayer {
       include: "player,identifier",
       "page[size]": "100",
     });
+    const res = await this.helpers.makeRequest<IdentifiersResponse>({
+      method: "GET",
+      path,
+      data,
+    });
+    return res;
+  }
+
 
     return await this.helpers.makeRequest({ method: "GET", path, data });
   }
