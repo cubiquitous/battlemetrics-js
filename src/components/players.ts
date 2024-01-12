@@ -27,7 +27,7 @@ type ISearchOptions = {
 
 interface Iplayer {
   countHistory: (props: countHistory) => Promise<CountDataPoint[]>;
-  search: (options: ISearchOptions) =>  Promise<SearchPlayerResponse>;
+  search: (options: ISearchOptions) => Promise<SearchPlayerResponse>;
 }
 
 export default class Player implements Iplayer {
