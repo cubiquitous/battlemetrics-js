@@ -1,4 +1,3 @@
-import { log } from "console";
 import { URL } from "url";
 
 declare type Method = "GET" | "POST" | "PATCH" | "UPDATE" | "DELETE";
@@ -40,7 +39,7 @@ export default class Helpers {
       };
     } else {
       url = new URL(path, this.baseURL);
-      if (params) url.search = params!.toString();
+      if (params) url.search = params.toString();
     }
 
     const response = await fetch(url, requestOptions);
@@ -49,9 +48,10 @@ export default class Helpers {
         "You're being rate limited by the API. Please wait a minute before trying again."
       );
     }
+    // future reference: for dealing with edge cases
     // const contentType = response.headers.get("content-type");
     // console.log({contentType})
-    //   log(response);
+    // console.log(response);
     // if(contentType?.includes(""))
     const res: T = await response.json();
 
