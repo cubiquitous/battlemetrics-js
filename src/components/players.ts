@@ -32,7 +32,7 @@ interface Iplayer {
   search: (options: ISearchOptions) => Promise<SearchPlayerResponse>;
 }
 
-export default class Player implements Iplayer {
+export default class Player {
   public constructor(private helpers: Helpers, private baseUrl: string) {}
 
   public async countHistory(countHistoryobj: countHistory) {
