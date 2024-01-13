@@ -131,4 +131,18 @@ export default class Player implements Iplayer {
       method: "GET",
       path: "/players",
       params: new URLSearchParams(data),
+  public async info(identifier: number) {
+    const path: string = `/players/${identifier}`;
+    const params = new URLSearchParams({
+      include: "identifier,server,playerCounter,playerFlag,flagPlayer",
+    });
+
+    const res = await this.helpers.makeRequest<GenericAPIResponse<Player>>({
+      method: "GET",
+      path,
+      params,
+    });
+    return res;
+  }
+
 }
