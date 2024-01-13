@@ -277,4 +277,46 @@ export default class Player implements Iplayer {
     });
   }
 
+  // TODO: find proper type
+  public async coplayInfo(
+    playerId: number,
+    timeStart?: string,
+    timeEnd?: string,
+    playerNames?: string,
+    organizationNames?: string,
+    serverNames?: string
+  ): Promise<GenericAPIResponse<any>> {
+    if (!timeStart) {
+      const now = new Date();
+      now.setDate(now.getDate() - 1);
+      timeStart = now.toISOString();
+    }
+    if (!timeEnd) {
+      timeEnd = new Date().toISOString();
+    }
+
+    const data: any = {
+      "filter[period]": `${timeStart}:${timeEnd}`,
+      "page[size]": "100",
+      "fields[coplayrelation]": "name,duration",
+    };
+
+    if (playerNames) {
+      data["filter[players]"] = playerNames;
+    }
+    if (organizationNames) {
+      data["filter[organizations]"] = organizationNames;
+    }
+    if (serverNames) {
+      data["filter[servers]"] = serverNames;
+    }
+
+    const path: string = `/players/${playerId}/relationships/coplay`;
+    return await this.helpers.makeRequest({
+      method: "GET",
+      path,
+      params: new URLSearchParams(data),
+    });
+  }
+
 }
