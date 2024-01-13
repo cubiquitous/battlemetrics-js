@@ -228,4 +228,26 @@ export default class Player implements Iplayer {
     });
   }
 
+  // TODO: find proper type
+  public async addFlag(playerId: number, flagId?: string): Promise<any> {
+    const path = `/players/${playerId}/relationships/flags`;
+    const data: { data: { type: string; id?: string }[] } = {
+      data: [
+        {
+          type: "payerFlag",
+        },
+      ],
+    };
+
+    if (flagId) {
+      data.data[0].id = flagId;
+    }
+
+    return await this.helpers.makeRequest({
+      method: "POST",
+      path,
+      data: JSON.stringify(data),
+    });
+  }
+
 }
