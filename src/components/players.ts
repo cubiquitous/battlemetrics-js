@@ -340,4 +340,32 @@ export default class Player implements Iplayer {
     return await this.helpers.makeRequest({ method: "POST", path, data });
   }
 
+  // TODO: find proper type
+  public async addNote(
+    note: string,
+    organizationId: number,
+    playerId: number,
+    shared: boolean = true
+  ): Promise<GenericAPIResponse<any>> {
+    const path = `/players/${playerId}/relationships/notes`;
+
+    const data = JSON.stringify({
+      data: {
+        type: "playerNote",
+        attributes: {
+          note: note,
+          shared: shared,
+        },
+        relationships: {
+          organization: {
+            data: {
+              type: "organization",
+              id: organizationId.toString(),
+            },
+          },
+        },
+      },
+    });
+    return await this.helpers.makeRequest({ method: "POST", path, data });
+  }
 }
