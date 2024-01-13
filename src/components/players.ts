@@ -171,4 +171,13 @@ export default class Player implements Iplayer {
       params,
     });
   }
+
+  public async serverInfo(playerId: number, serverId: number): Promise<any> {
+    // Change 'any' to a more specific type if you know the structure of the response
+    return await this.helpers.makeRequest({
+      method: "GET",
+      path: `/players/${playerId}/servers/${serverId}`,
+      params: new URLSearchParams(""),
+    });
+  }
 }
