@@ -180,4 +180,26 @@ export default class Player implements Iplayer {
       params: new URLSearchParams(""),
     });
   }
+
+  public async matchIdentifiers(
+    identifier: string,
+    identifierType?: string
+  ): Promise<any> {
+    // TODO: define type after create html parser
+    const path = `/players/match?include=player,server,identifier,playerFlag,flagPlayer`;
+    const data = JSON.stringify({
+      data: [
+        {
+          type: "identifier",
+          attributes: {
+            type: identifierType,
+            identifier: identifier,
+          },
+        },
+      ],
+    });
+
+    return await this.helpers.makeRequest({ method: "POST", path, data });
+  }
+
 }
