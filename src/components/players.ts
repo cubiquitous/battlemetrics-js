@@ -93,9 +93,7 @@ export default class Player implements Iplayer {
     return res;
   }
 
-  public async search(
-    options: ISearchOptions = {}
-  ): Promise<SearchPlayerResponse> {
+  public async search(options: SearchOptions = {}) {
     const {
       search,
       filterServers,
@@ -127,10 +125,15 @@ export default class Player implements Iplayer {
       };
     }
 
-    return await this.helpers.makeRequest<SearchPlayerResponse>({
+    return await this.helpers.makeRequest<
+      GenericAPIResponse<RelatedIdentifier[]>
+    >({
       method: "GET",
       path: "/players",
       params: new URLSearchParams(data),
+    });
+  }
+
   public async info(identifier: number) {
     const path: string = `/players/${identifier}`;
     const params = new URLSearchParams({
