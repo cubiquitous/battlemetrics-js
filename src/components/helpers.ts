@@ -5,14 +5,14 @@ declare type Method = "GET" | "POST" | "PATCH" | "UPDATE" | "DELETE";
 type Header = { Authorization: string };
 
 interface IDataRequest {
-  method: Method;
+  method: Exclude<Method, "GET">;
   path: string;
   data: string;
   params?: URLSearchParams;
 }
 
 interface IParamRequest {
-  method: Method;
+  method: "GET";
   path: string;
   data?: string;
   params: URLSearchParams;
@@ -49,12 +49,16 @@ export default class Helpers {
       );
     }
     // future reference: for dealing with edge cases
-    // const contentType = response.headers.get("content-type");
-    // console.log({contentType})
+    const contentType = response.headers.get("content-type");
+    // console.log({ contentType });
     // console.log(response);
-    // if(contentType?.includes(""))
-    const res: T = await response.json();
-
-    return res;
+    // Initial dealing with edge cases
+    if (contentType == "application/json") {
+      return await response.json();
+    } else if (contentType == "text/html; charset=UTF-8") {
+      return "text/html; charset=UTF-8" as T;
+    } else {
+      return "res" as T;
+    }
   }
 }
