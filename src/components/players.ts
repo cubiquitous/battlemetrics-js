@@ -5,6 +5,7 @@ import {
 import { CountDataPoint } from "../../types/battlemetrics/playerTypes.ts";
 import { RelatedIdentifier } from "../../types/battlemetrics/relatedIdentifier.ts";
 import Helpers from "./helpers.ts";
+import { URLSearchParams } from "url";
 
 type countHistory = {
   serverId: number;
@@ -80,14 +81,14 @@ export default class Player implements Iplayer {
       */
 
     const path = `/players/${playerID}/relationships/related-identifiers`;
-    const data = JSON.stringify({
+    const params = new URLSearchParams({
       include: "player,identifier",
       "page[size]": "100",
     });
     const res = await this.helpers.makeRequest<IdentifiersResponse>({
       method: "GET",
       path,
-      data,
+      params,
     });
     return res;
   }
@@ -129,7 +130,5 @@ export default class Player implements Iplayer {
     return await this.helpers.makeRequest<SearchPlayerResponse>({
       method: "GET",
       path: "/players",
-      data: data.toString(),
-    });
-  }
+      params: new URLSearchParams(data),
 }
