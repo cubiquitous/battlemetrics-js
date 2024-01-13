@@ -14,10 +14,7 @@ type countHistory = {
   resolution?: string;
 };
 
-type SearchPlayerResponse = GenericAPIResponse<RelatedIdentifier[]>;
-type IdentifiersResponse = GenericAPIResponse<Player>;
-
-type ISearchOptions = {
+type SearchOptions = {
   search?: string;
   filterGame?: string;
   filterOnline?: boolean;
@@ -27,10 +24,20 @@ type ISearchOptions = {
   flag?: string;
 };
 
-interface Iplayer {
-  countHistory: (props: countHistory) => Promise<CountDataPoint[]>;
-  search: (options: ISearchOptions) => Promise<SearchPlayerResponse>;
-}
+type PlayHistoryParams = {
+  playerId: number;
+  serverId: number;
+  startTime?: string;
+  endTime?: string;
+};
+
+type playHistoryresponse = {
+  meta: {
+    start: string;
+    stop: string;
+  };
+  data: DataPoint[];
+};
 
 export default class Player {
   public constructor(private helpers: Helpers, private baseUrl: string) {}
