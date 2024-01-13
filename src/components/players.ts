@@ -35,9 +35,7 @@ interface Iplayer {
 export default class Player implements Iplayer {
   public constructor(private helpers: Helpers, private baseUrl: string) {}
 
-  public async countHistory(
-    countHistoryobj: countHistory
-  ): Promise<CountDataPoint[]> {
+  public async countHistory(countHistoryobj: countHistory) {
     /** Player Count History
         Documentation: https://www.battlemetrics.com/developers/documentation#link-GET-server-/servers/{(%23%2Fdefinitions%2Fserver%2Fdefinitions%2Fidentity)}/player-count-history
         Returns an Array filled with Datapoints of the player count history.
@@ -71,7 +69,7 @@ export default class Player implements Iplayer {
     return res.data;
   }
 
-  public async identifiers(playerID: number): Promise<IdentifiersResponse> {
+  public async identifiers(playerID: number) {
     /** Get player identifiers and related players and identifiers.
         Documentation: https://www.battlemetrics.com/developers/documentation#link-GET-relatedIdentifier-/players/{(%23%2Fdefinitions%2Fplayer%2Fdefinitions%2Fidentity)}/relationships/related-identifiers
         Args:
@@ -85,7 +83,7 @@ export default class Player implements Iplayer {
       include: "player,identifier",
       "page[size]": "100",
     });
-    const res = await this.helpers.makeRequest<IdentifiersResponse>({
+    const res = await this.helpers.makeRequest<GenericAPIResponse<Player>>({
       method: "GET",
       path,
       params,
