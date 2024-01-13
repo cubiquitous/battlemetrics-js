@@ -319,4 +319,25 @@ export default class Player implements Iplayer {
     });
   }
 
+  // TODO: find proper type
+  public async quickMatch(
+    identifier: string,
+    identifierType: string
+  ): Promise<GenericAPIResponse<any>> {
+    const path: string = "/players/quick-match";
+    const data = JSON.stringify({
+      data: [
+        {
+          type: "identifier",
+          attributes: {
+            type: identifierType,
+            identifier: identifier,
+          },
+        },
+      ],
+    });
+
+    return await this.helpers.makeRequest({ method: "POST", path, data });
+  }
+
 }
