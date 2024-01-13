@@ -250,4 +250,18 @@ export default class Player implements Iplayer {
     });
   }
 
+  // TODO: find proper type
+  public async flags(playerId: number): Promise<GenericAPIResponse<any>> {
+    const params = new URLSearchParams({
+      "page[size]": "100",
+      include: "playerFlag",
+    });
+
+    return await this.helpers.makeRequest({
+      method: "GET",
+      path: `/players/${playerId}/relationships/flags`,
+      params,
+    });
+  }
+
 }
