@@ -264,4 +264,17 @@ export default class Player implements Iplayer {
     });
   }
 
+  // TODO: find proper type
+  public async deleteFlag(
+    playerId: number,
+    flagId: string
+  ): Promise<GenericAPIResponse<any>> {
+    const path: string = `/players/${playerId}/relationships/flags/${flagId}`;
+    return await this.helpers.makeRequest({
+      method: "DELETE",
+      path,
+      data: "",
+    });
+  }
+
 }
