@@ -145,4 +145,30 @@ export default class Player implements Iplayer {
     return res;
   }
 
+  public async playHistory(historyParams: PlayHistoryParams) {
+    let { playerId, serverId, startTime, endTime } = historyParams;
+
+    const now: Date = new Date();
+    if (!startTime) {
+      const startDate: Date = new Date(now.getTime() - 5 * 24 * 60 * 60 * 1000); // 5 days ago
+      startTime = startDate.toISOString();
+    }
+
+    if (!endTime) {
+      const endDate: Date = new Date(now.getTime() + 24 * 60 * 60 * 1000); // 1 day from now
+      endTime = endDate.toISOString();
+    }
+
+    const path = `/players/${playerId}/time-played-history/${serverId}`;
+    const params = new URLSearchParams({
+      start: startTime,
+      stop: endTime,
+    });
+
+    return await this.helpers.makeRequest<playHistoryresponse>({
+      method: "GET",
+      path,
+      params,
+    });
+  }
 }
