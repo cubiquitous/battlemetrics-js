@@ -202,4 +202,30 @@ export default class Player implements Iplayer {
     return await this.helpers.makeRequest({ method: "POST", path, data });
   }
 
+  public async sessionHistory(
+    playerId: number,
+    filterServer?: string,
+    filterOrganization?: string
+  ): Promise<GenericAPIResponse<Player>> {
+    const path = `/players/${playerId}/relationships/sessions`;
+    const data: any = {
+      include: "identifier,server",
+      "page[size]": "100",
+    };
+
+    if (filterServer) {
+      data["filter[servers]"] = filterServer;
+    }
+    if (filterOrganization) {
+      data["filter[organizations]"] = filterOrganization;
+    }
+    const params = new URLSearchParams(data);
+
+    return await this.helpers.makeRequest({
+      method: "GET",
+      path,
+      params,
+    });
+  }
+
 }
