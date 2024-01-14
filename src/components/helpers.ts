@@ -18,6 +18,14 @@ interface IParamRequest {
   params: URLSearchParams;
 }
 
+type MatchResult = {
+  error: string;
+  reason: string;
+  adittionalInfo: {
+    [key: string]: string;
+  };
+};
+
 type IRequest = IDataRequest | IParamRequest;
 
 export default class Helpers {
