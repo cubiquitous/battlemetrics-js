@@ -43,6 +43,7 @@ export default class Helpers {
     }
 
     const response = await fetch(url, requestOptions);
+
     if (response.status === 429) {
       throw new Error(
         "You're being rate limited by the API. Please wait a minute before trying again."
@@ -58,7 +59,7 @@ export default class Helpers {
     } else if (contentType == "text/html; charset=UTF-8") {
       return "text/html; charset=UTF-8" as T;
     } else {
-      return "res" as T;
+      return "res" as T; // TODO: find where triggers edge case and solve it;
     }
   }
 }
