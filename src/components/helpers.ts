@@ -52,7 +52,6 @@ export default class Helpers {
     // future reference: for dealing with edge cases
     const contentType = response.headers.get("content-type");
     // console.log({ contentType });
-    // console.log(response);
     // Initial dealing with edge cases
     if (contentType == "application/json") {
       return await response.json();
