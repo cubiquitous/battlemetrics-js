@@ -67,13 +67,14 @@ export default class Player {
       resolution,
     });
 
-    const res = await this.helpers.makeRequest<{ data: CountDataPoint[] }>({
+    const res = await this.helpers.makeRequest<
+      GenericAPIResponse<CountDataPoint[]>
+    >({
       method: "GET",
       path,
       params,
     });
-
-    return res.data;
+    return res;
   }
 
   public async identifiers(playerID: number) {
