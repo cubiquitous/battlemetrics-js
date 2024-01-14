@@ -114,6 +114,9 @@ export default class Helpers {
           key !== "Your IP address" && (result.adittionalInfo[key] = value)
       );
 
+    throw new htmlResponseError("Permission error", result);
+  }
+}
 class htmlResponseError extends Error {
   public details: MatchResult;
   constructor(public message: string, details: MatchResult) {
