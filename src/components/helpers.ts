@@ -31,24 +31,26 @@ type IRequest = IDataRequest | IParamRequest;
 export default class Helpers {
   public constructor(private headers: Header, private baseURL: string) {}
 
-  async makeRequest<T>({ method, path, params, data }: IRequest): Promise<T> {
+  async makeRequest<T>({
+    method,
+    path = "",
+    params,
+    data,
+  }: IRequest): Promise<T> {
     const requestOptions: RequestInit = {
       headers: this.headers,
       method,
     };
-    let url: URL;
+    const url = new URL(path, this.baseURL);
 
     if (["POST", "PATCH"].includes(method)) {
-      url = new URL(this.baseURL);
       requestOptions.body = data;
       requestOptions.headers = {
         ...requestOptions.headers,
         "Content-Type": "application/json",
       };
-    } else {
-      url = new URL(path, this.baseURL);
-      if (params) url.search = params.toString();
     }
+    if (params) url.search = params.toString();
 
     const response = await fetch(url, requestOptions);
 
