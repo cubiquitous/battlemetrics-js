@@ -57,7 +57,7 @@ export default class Helpers {
     if (contentType == "application/json") {
       return await response.json();
     } else if (contentType == "text/html; charset=UTF-8") {
-      return "text/html; charset=UTF-8" as T;
+      this.htmlHandler(response);
     } else {
       return "res" as T; // TODO: find where triggers edge case and solve it;
     }
