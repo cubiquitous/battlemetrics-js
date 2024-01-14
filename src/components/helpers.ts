@@ -117,6 +117,7 @@ export default class Helpers {
     throw new htmlResponseError("Permission error", result);
   }
 }
+
 class htmlResponseError extends Error {
   public details: MatchResult;
   constructor(public message: string, details: MatchResult) {
