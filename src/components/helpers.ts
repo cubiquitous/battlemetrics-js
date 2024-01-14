@@ -114,6 +114,10 @@ export default class Helpers {
           key !== "Your IP address" && (result.adittionalInfo[key] = value)
       );
 
-    throw result;
+class htmlResponseError extends Error {
+  public details: MatchResult;
+  constructor(public message: string, details: MatchResult) {
+    super(message);
+    this.details = details;
   }
 }
