@@ -30,10 +30,14 @@ async function main(): Promise<void> {
   // print(playHistory);
   // const serverInfo = await bm.player.serverInfo(playerId, serverId);
   // print(serverInfo);
-  // const matchIdentifiers = await bm.player.matchIdentifiers(
-  //   "76561198151275725",
-  //   "steamID"
-  // );
+  // try {
+  //   const matchIdentifiers = await bm.player.matchIdentifiers(
+  //     "76561198151275725",
+  //     "steamID"
+  //   );
+  // } catch (e) {
+  //   console.log(e);
+  // }
   // print(matchIdentifiers);
   // const sessionHistory = await bm.player.sessionHistory(playerId);
   // print(sessionHistory);
