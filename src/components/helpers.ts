@@ -31,12 +31,7 @@ type IRequest = IDataRequest | IParamRequest;
 export default class Helpers {
   public constructor(private headers: Header, private baseURL: string) {}
 
-  async makeRequest<T>({
-    method,
-    path,
-    params,
-    data,
-  }: IRequest): Promise<T | Error> {
+  async makeRequest<T>({ method, path, params, data }: IRequest): Promise<T> {
     const requestOptions: RequestInit = {
       headers: this.headers,
       method,
@@ -69,7 +64,7 @@ export default class Helpers {
     if (contentType == "application/json") {
       return await response.json();
     } else if (contentType == "text/html; charset=UTF-8") {
-      return await this.htmlHandler(response);
+      throw await this.htmlHandler(response);
     } else {
       return "res" as T; // TODO: find where triggers edge case and solve it;
     }
