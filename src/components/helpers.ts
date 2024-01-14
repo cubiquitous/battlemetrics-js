@@ -62,4 +62,51 @@ export default class Helpers {
       return "res" as T; // TODO: find where triggers edge case and solve it;
     }
   }
+
+  private async htmlHandler(response: Response) {
+    const htmlContent = await response.text(); // Get the HTML content as text
+
+    // Regular expression to capture the text content inside tags and separate by groups
+    const regex =
+      /<h1>Access denied<\/h1>\s*<p>(.*?)<\/p>\s*<p>(.*?)<\/p>\s*<ul class="cferror_details">(.*?)<\/ul>/s;
+
+    const match = htmlContent.match(regex);
+
+    if (!match) {
+      throw new Error(
+        "unknow error, contact the developers and consider opening an issue"
+      );
+    }
+
+    type MatchResult = {
+      type: string;
+      error: string;
+      reason: string;
+      adittionalInfo: {
+        [key: string]: string;
+      };
+    };
+
+    // Create an object to store the captured text content
+    const result: MatchResult = {
+      type: "permission",
+      error: "Access denied",
+      reason: match[1] + " " + match[2],
+      adittionalInfo: {},
+    };
+
+    // Extract content inside <li>
+    const liRegex = /<li>([^<:]+): ([^<]+)<\/li>/;
+
+    match[3]
+      .split("\n")
+      .map((item: string) => item.match(liRegex)!)
+      .filter(Boolean)
+      .forEach(
+        ([_, key, value]) =>
+          key !== "Your IP address" && (result.adittionalInfo[key] = value)
+      );
+
+    throw result;
+  }
 }
