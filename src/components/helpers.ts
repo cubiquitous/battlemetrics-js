@@ -70,7 +70,7 @@ export default class Helpers {
     }
   }
 
-  private async htmlHandler(response: Response) {
+  private async htmlHandler(response: Response): Promise<Error> {
     const htmlContent = await response.text(); // Get the HTML content as text
 
     // Regular expression to capture the text content inside tags and separate by groups
