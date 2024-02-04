@@ -18,3 +18,15 @@ export type GenericAPIResponse<T, U = any> = {
     included: [];
   };
 };
+
+export type Identifier = {
+  type: string;
+  id: string;
+  attributes: {
+    type: string;
+    identifier: string;
+    lastSeen: ISODateString;
+    private: boolean;
+    metadata?: null;
+  };
+};
