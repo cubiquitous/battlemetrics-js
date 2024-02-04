@@ -39,6 +39,18 @@ type playHistoryresponse = {
   data: DataPoint[];
 };
 
+interface AddBanArgs {
+  reason: string;
+  note: string;
+  orgId: string;
+  banlist: string;
+  serverId: string;
+  expires?: string;
+  orgwide?: boolean;
+  battlemetricsId?: number;
+  steamId?: number;
+}
+
 export default class Player {
   public constructor(private helpers: Helpers, private baseUrl: string) {}
 
