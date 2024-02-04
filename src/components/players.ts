@@ -489,7 +489,7 @@ export default class Player {
 
     return await this.helpers.makeRequest({
       method: "POST",
-      path: `${this.baseUrl}/bans`,
+      path: `/bans`,
       data: JSON.stringify(data),
     });
   }
