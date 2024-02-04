@@ -1,4 +1,4 @@
-import { dateString } from "./battlemetricsTypes.js";
+import { ISODateString } from "./battlemetricsTypes.js";
 import { Organization } from "./organizationTypes.js";
 import { Player } from "./playerTypes.js";
 
@@ -17,11 +17,11 @@ export type RelatedIdentifier = {
   attributes?: {
     type: string;
     identifier: string;
-    lastSeen: dateString;
+    lastSeen: ISODateString;
     private: boolean;
     metadata: {
       country: string;
-      lastCheck: dateString;
+      lastCheck: ISODateString;
       connectionInfo: {
         tor: boolean;
         datacenter: boolean;
