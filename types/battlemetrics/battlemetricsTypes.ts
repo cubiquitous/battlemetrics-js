@@ -10,7 +10,8 @@ export interface DataPoint {
   min?: number;
 }
 
-export type GenericAPIResponse<T> = {
+export type GenericAPIResponse<T, U = any> = {
+  included?: U[];
   data: {
     data: T;
     links: { next?: string };
