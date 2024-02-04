@@ -103,6 +103,32 @@ export default class Helpers {
 
     throw new htmlResponseError("Permission error", result);
   }
+
+  calculateFutureDate(inputString: string): string | undefined {
+    const unit = inputString.slice(-1);
+    //early return
+    if (!["d", "w", "m", "h"].includes(unit)) {
+      return undefined;
+    }
+    const number = parseInt(inputString.slice(0, -1));
+
+    const toISOString = (d: Date): string =>
+      d.toISOString().replace(/\.\d{3}Z$/, "Z");
+
+    let futureDate: any;
+    switch (unit) {
+      case "d":
+        return toISOString(new Date(number * 24 * 60 * 60 * 1000)); // Convert days to milliseconds
+      case "w":
+        return toISOString(new Date(number * 7 * 24 * 60 * 60 * 1000)); // Convert weeks to milliseconds
+      case "m":
+        return toISOString(new Date(number * 30 * 24 * 60 * 60 * 1000)); // Approximate for months, convert to milliseconds
+      case "h":
+        return toISOString(new Date(number * 60 * 60 * 1000)); // Convert hours to milliseconds
+      default:
+        return undefined;
+    }
+  }
 }
 
 class htmlResponseError extends Error {
