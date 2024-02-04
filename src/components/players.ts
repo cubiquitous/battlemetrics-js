@@ -1,11 +1,13 @@
 import {
   GenericAPIResponse,
   DataPoint,
+  Identifier,
 } from "../../types/battlemetrics/battlemetricsTypes.ts";
 import { CountDataPoint } from "../../types/battlemetrics/playerTypes.ts";
 import { RelatedIdentifier } from "../../types/battlemetrics/relatedIdentifier.ts";
 import Helpers from "./helpers.ts";
 import { URLSearchParams } from "url";
+import { randomUUID } from "node:crypto";
 
 type countHistory = {
   serverId: number;
@@ -388,5 +390,107 @@ export default class Player {
       },
     });
     return await this.helpers.makeRequest({ method: "POST", path, data });
+  }
+
+  // TODO: find proper type
+  // WARNING: untested
+  public async addBan({
+    reason,
+    note,
+    orgId,
+    banlist,
+    serverId,
+    expires,
+    orgwide = true,
+    battlemetricsId,
+    steamId,
+  }: AddBanArgs): Promise<any> {
+    if (expires) {
+      expires = this.helpers.calculateFutureDate(expires);
+    }
+
+    const data = {
+      data: {
+        type: "ban",
+        attributes: {
+          uid: randomUUID().slice(0, 14),
+          reason,
+          note,
+          expires,
+          identifiers: [],
+          orgWide: orgwide,
+          autoAddEnabled: true,
+          nativeEnabled: null,
+        },
+        relationships: {
+          organization: {
+            data: {
+              type: "organization",
+              id: `${orgId}`,
+            },
+          },
+          server: {
+            data: {
+              type: "server",
+              id: `${serverId}`,
+            },
+          },
+          player: {
+            data: {
+              type: "player",
+              id: `${battlemetricsId}`,
+            },
+          },
+          banList: {
+            data: {
+              type: "banList",
+              id: `${banlist}`,
+            },
+          },
+        },
+      },
+    };
+
+    if (!steamId && !battlemetricsId) {
+      throw new Error(
+        "Please submit either a STEAM IDENTIFIER or BATTLEMETRICS IDENTIFIER"
+      );
+    }
+
+    let bmid: string | undefined;
+    if (steamId && !battlemetricsId) {
+      const battlemetricsIdentifiers = await this.matchIdentifiers(
+        steamId.toString(),
+        "steamID"
+      );
+
+      bmid = battlemetricsIdentifiers.data[0].relationships.player.data
+        .id as string;
+    }
+
+    if (bmid) {
+      const playerInfo = await this.info<Identifier>(Number(battlemetricsId));
+      if (!playerInfo?.included) {
+        throw new Error(`Couldn't find ${battlemetricsId}`);
+      }
+
+      for (const included of playerInfo.included) {
+        if (included.type === "identifier") {
+          if (
+            included.attributes.type === "BEGUID" ||
+            included.attributes.type === "steamID"
+          ) {
+            const identifiers: number[] = data.data.attributes.identifiers;
+            identifiers.push(parseInt(included.id));
+          }
+        }
+      }
+    }
+
+    return await this.helpers.makeRequest({
+      method: "POST",
+      path: `${this.baseUrl}/bans`,
+      data: JSON.stringify(data),
+    });
   }
 }
