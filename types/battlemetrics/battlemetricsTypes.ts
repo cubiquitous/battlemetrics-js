@@ -1,4 +1,4 @@
-export type dateString = string;
+export type ISODateString = string;
 
 export interface DataPoint {
   type?: string;
