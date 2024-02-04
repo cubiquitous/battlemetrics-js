@@ -1,6 +1,6 @@
 import { URL } from "url";
 
-declare type Method = "GET" | "POST" | "PATCH" | "UPDATE" | "DELETE";
+type Method = "GET" | "POST" | "PATCH" | "UPDATE" | "DELETE";
 
 type Header = { Authorization: string };
 
@@ -31,12 +31,7 @@ type IRequest = IDataRequest | IParamRequest;
 export default class Helpers {
   public constructor(private headers: Header, private baseURL: string) {}
 
-  async makeRequest<T>({
-    method,
-    path = "",
-    params,
-    data,
-  }: IRequest): Promise<T> {
+  async makeRequest<T>({ method, path, params, data }: IRequest): Promise<T> {
     const requestOptions: RequestInit = {
       headers: this.headers,
       method,
@@ -68,7 +63,7 @@ export default class Helpers {
     } else if (contentType == "text/html; charset=UTF-8") {
       throw await this.htmlHandler(response);
     } else {
-      return "res" as T; // TODO: find where triggers edge case and solve it;
+      throw new Error(`unsuportted content type: ${contentType} `);
     }
   }
 
