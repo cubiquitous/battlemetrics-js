@@ -140,13 +140,13 @@ export default class Player {
     });
   }
 
-  public async info(identifier: number) {
+  public async info<U>(identifier: number) {
     const path: string = `/players/${identifier}`;
     const params = new URLSearchParams({
       include: "identifier,server,playerCounter,playerFlag,flagPlayer",
     });
 
-    const res = await this.helpers.makeRequest<GenericAPIResponse<Player>>({
+    const res = await this.helpers.makeRequest<GenericAPIResponse<Player, U>>({
       method: "GET",
       path,
       params,
