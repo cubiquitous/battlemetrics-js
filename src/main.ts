@@ -1,3 +1,4 @@
+import { Flags } from "./components/flags.ts";
 import Helpers from "./components/helpers.js";
 import Player from "./components/players.js";
 
@@ -8,11 +9,12 @@ export default class BattleMetrics {
   private responseData: null;
   private helpers: Helpers;
   public player: Player;
+  public flags: Flags;
 
   public constructor(token: string | undefined) {
-    // if (typeof token !== "string") {
-    //   throw new Error("You need to provide a Token in the `.env` file");
-    // }
+    if (typeof token !== "string") {
+      throw new Error("You need to provide a Token");
+    }
 
     this.baseURL = "https://api.battlemetrics.com";
     this.apiKey = token;
@@ -20,6 +22,7 @@ export default class BattleMetrics {
     this.responseData = null;
     this.helpers = new Helpers(this.headers, this.baseURL);
     this.player = new Player(this.helpers, this.baseURL);
+    this.flags = new Flags(this.helpers, token);
   }
 }
 
