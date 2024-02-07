@@ -7,7 +7,7 @@ type Header = { Authorization: string };
 interface IDataRequest {
   method: Exclude<Method, "GET">;
   path: string;
-  data: string;
+  data?: string;
   params?: URLSearchParams;
 }
 
@@ -15,7 +15,7 @@ interface IParamRequest {
   method: "GET";
   path: string;
   data?: string;
-  params: URLSearchParams;
+  params?: URLSearchParams;
 }
 
 type MatchResult = {
