@@ -1,17 +1,34 @@
 import Helpers from "./helpers.ts";
 
+type CreateArgs = {
+  color: string;
+  description: string;
+  iconName: string;
+  flagName: string;
+  organizationId: number;
+  userId: number;
+};
+
+type UpdateArgs = {
+  flagId: string;
+  color: string;
+  description: string;
+  iconName: string;
+  flagName: string;
+};
+
 export class Flags {
   constructor(private helpers: Helpers, private apiKey: string) {}
 
   // TODO: find proper type
-  async create(
-    color: string,
-    description: string,
-    iconName: string,
-    flagName: string,
-    organizationId: number,
-    userId: number
-  ): Promise<any> {
+  async create({
+    color,
+    description,
+    iconName,
+    flagName,
+    organizationId,
+    userId,
+  }: CreateArgs): Promise<any> {
     const path = "/player-flags";
     const data = {
       data: {
@@ -81,13 +98,13 @@ export class Flags {
   }
 
   // TODO: find proper type
-  async update(
-    flagId: string,
-    color: string,
-    description: string,
-    iconName: string,
-    flagName: string
-  ): Promise<any> {
+  async update({
+    flagId,
+    color,
+    description,
+    iconName,
+    flagName,
+  }: UpdateArgs): Promise<any> {
     const data = {
       data: {
         type: "playerFlag",
