@@ -54,7 +54,7 @@ interface AddBanArgs {
 }
 
 export default class Player {
-  public constructor(private helpers: Helpers, private baseUrl: string) {}
+  public constructor(private helpers: Helpers) {}
 
   public async countHistory(countHistoryobj: countHistory) {
     /** Player Count History
