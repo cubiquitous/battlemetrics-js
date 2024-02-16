@@ -1,4 +1,5 @@
 import { URL } from "url";
+import { GenericAPIResponse } from "../../types/battlemetrics/battlemetricsTypes.ts";
 
 type Method = "GET" | "POST" | "PATCH" | "UPDATE" | "DELETE";
 
@@ -31,7 +32,12 @@ type IRequest = IDataRequest | IParamRequest;
 export default class Helpers {
   public constructor(private headers: Header, private baseURL: string) {}
 
-  async makeRequest<T>({ method, path, params, data }: IRequest): Promise<T> {
+  async makeRequest<T>({
+    method,
+    path,
+    params,
+    data,
+  }: IRequest): Promise<GenericAPIResponse<T>> {
     const requestOptions: RequestInit = {
       headers: this.headers,
       method,
