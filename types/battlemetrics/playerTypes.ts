@@ -3,17 +3,45 @@ import { DataPoint } from "./battlemetricsTypes.js";
 export type CountDataPoint = Partial<DataPoint> &
   Pick<DataPoint, "timestamp" | "group">;
 
-export type Player = {
-  type: string;
+type GeneralType<U> = {
+  type: U;
   id: string;
+};
+
+export type Player = GeneralType<"player">;
+export type Server = GeneralType<"server">;
+export type Organization = GeneralType<"organization">;
+export type User = GeneralType<"user">;
+export type BanList = GeneralType<"banList">;
+
+export type Ban = GeneralType<"ban"> & {
   attributes: {
     id: string;
-    name: string;
-    private: boolean;
-    positiveMatch: boolean;
-    createdAt: string;
-    updatedAt: string;
+    uid: string;
+    timestamp: string;
+    reason: string;
+    note: string;
+    identifiers: [];
+    expires: null;
+    autoAddEnabled: true;
+    nativeEnabled: null;
+    orgWide: true;
   };
-  relationships: {};
-  included: [];
+  relationships: {
+    server: {
+      data: Server;
+    };
+    organization: {
+      data: Organization;
+    };
+    player: {
+      data: Player;
+    };
+    user: {
+      data: User;
+    };
+    banList: {
+      data: BanList;
+    };
+  };
 };
