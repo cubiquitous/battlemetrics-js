@@ -105,7 +105,9 @@ export default class Player {
       include: "player,identifier",
       "page[size]": "100",
     });
-    const res = await this.helpers.makeRequest<GenericAPIResponse<Player>>({
+    return await this.helpers.makeRequest<
+      GenericAPIResponse<RelatedIdentifier>
+    >({
       method: "GET",
       path,
       params,
