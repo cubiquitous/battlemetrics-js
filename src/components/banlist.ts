@@ -396,13 +396,13 @@ export class BanList {
       banList.attributes.action = action;
     }
     if (autoadd !== undefined) {
-      banList.attributes.defaultAutoAddEnabled = autoadd.toString();
+      banList.attributes.defaultAutoAddEnabled = autoadd;
     }
     if (banIdentifiers) {
       banList.attributes.defaultIdentifiers = banIdentifiers;
     }
     if (nativeBan !== undefined) {
-      banList.attributes.defaultNativeEnabled = nativeBan.toString();
+      banList.attributes.defaultNativeEnabled = nativeBan;
     }
     if (listDefaultReasons) {
       banList.attributes.defaultReasons = listDefaultReasons;
