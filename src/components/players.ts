@@ -3,18 +3,18 @@ import {
   DataPoint,
   Identifier,
 } from "../../types/battlemetrics/battlemetricsTypes.ts";
-import { CountDataPoint } from "../../types/battlemetrics/playerTypes.ts";
 import { RelatedIdentifier } from "../../types/battlemetrics/relatedIdentifier.ts";
 import Helpers from "./helpers.ts";
 import { URLSearchParams } from "url";
 import { randomUUID } from "node:crypto";
-
-type countHistory = {
-  serverId: number;
-  startTime?: string;
-  endTime?: string;
-  resolution?: string;
-};
+import {
+  Ban,
+  CoplayRelation,
+  FlagPlayer,
+  PlayHistory,
+  PlayerIdentifier,
+  PlayerNote,
+} from "../../types/battlemetrics/playerTypes.ts";
 
 type SearchOptions = {
   search?: string;
@@ -33,15 +33,7 @@ type PlayHistoryParams = {
   endTime?: string;
 };
 
-type playHistoryresponse = {
-  meta: {
-    start: string;
-    stop: string;
-  };
-  data: DataPoint[];
-};
-
-interface AddBanArgs {
+type AddBanParams = {
   reason: string;
   note: string;
   orgId: string;
@@ -51,68 +43,44 @@ interface AddBanArgs {
   orgwide?: boolean;
   battlemetricsId?: number;
   steamId?: number;
-}
+};
+
+type addNoteParams = {
+  note: string;
+  organizationId: number;
+  playerId: number;
+  shared: boolean;
+};
+
+type coplayInfoParam = {
+  playerId: number;
+  timeStart?: string;
+  timeEnd?: string;
+  playerNames?: string;
+  organizationNames?: string;
+  serverNames?: string;
+};
+
+type sessionHistoryParams = {
+  playerId: number;
+  filterServer?: string;
+  filterOrganization?: string;
+};
 
 export default class Player {
   public constructor(private helpers: Helpers) {}
 
-  public async countHistory(countHistoryobj: countHistory) {
-    /** Player Count History
-        Documentation: https://www.battlemetrics.com/developers/documentation#link-GET-server-/servers/{(%23%2Fdefinitions%2Fserver%2Fdefinitions%2Fidentity)}/player-count-history
-        Returns an Array filled with Datapoints of the player count history.
-    */
-    let { serverId, startTime, endTime, resolution = "raw" } = countHistoryobj;
-
-    if (!startTime) {
-      startTime = new Date(
-        new Date().getTime() - 1 * 24 * 60 * 60 * 1000 // 1 day in milliseconds;
-      ).toISOString();
-    }
-
-    if (!endTime) {
-      endTime = new Date().toISOString();
-    }
-
-    const path = `/servers/${serverId}/player-count-history`;
-
-    const params = new URLSearchParams({
-      start: startTime,
-      stop: endTime,
-      resolution,
-    });
-
-    const res = await this.helpers.makeRequest<
-      GenericAPIResponse<CountDataPoint[]>
-    >({
-      method: "GET",
-      path,
-      params,
-    });
-    return res;
-  }
-
   public async identifiers(playerID: number) {
-    /** Get player identifiers and related players and identifiers.
-        Documentation: https://www.battlemetrics.com/developers/documentation#link-GET-relatedIdentifier-/players/{(%23%2Fdefinitions%2Fplayer%2Fdefinitions%2Fidentity)}/relationships/related-identifiers
-        Args:
-            playerID (number): The player battlemetrics Identifier.
-        Returns:
-            dict: Players related identifiers.
-      */
-
     const path = `/players/${playerID}/relationships/related-identifiers`;
     const params = new URLSearchParams({
       include: "player,identifier",
       "page[size]": "100",
     });
-    return await this.helpers.makeRequest<
-      GenericAPIResponse<RelatedIdentifier[]>
-    >({
+    return await this.helpers.makeRequest<PlayerIdentifier[]>({
       method: "GET",
       path,
       params,
     });
-    return res;
   }
 
   public async search(options: SearchOptions = {}) {
@@ -147,22 +115,20 @@ export default class Player {
       };
     }
 
-    return await this.helpers.makeRequest<
-      GenericAPIResponse<RelatedIdentifier[]>
-    >({
+    return await this.helpers.makeRequest<RelatedIdentifier[]>({
       method: "GET",
       path: "/players",
       params: new URLSearchParams(data),
     });
   }
 
-  public async info<U>(identifier: number) {
+  public async info(identifier: number) {
     const path: string = `/players/${identifier}`;
     const params = new URLSearchParams({
       include: "identifier,server,playerCounter,playerFlag,flagPlayer",
     });
 
-    const res = await this.helpers.makeRequest<GenericAPIResponse<Player, U>>({
+    const res = await this.helpers.makeRequest<Player>({
       method: "GET",
       path,
       params,
@@ -170,9 +136,12 @@ export default class Player {
     return res;
   }
 
-  public async playHistory(historyParams: PlayHistoryParams) {
-    let { playerId, serverId, startTime, endTime } = historyParams;
-
+  public async playHistory({
+    playerId,
+    serverId,
+    startTime,
+    endTime,
+  }: PlayHistoryParams) {
     const now: Date = new Date();
     if (!startTime) {
       const startDate: Date = new Date(now.getTime() - 5 * 24 * 60 * 60 * 1000); // 5 days ago
@@ -190,7 +159,7 @@ export default class Player {
       stop: endTime,
     });
 
-    return await this.helpers.makeRequest<playHistoryresponse>({
+    return await this.helpers.makeRequest<PlayHistory>({
       method: "GET",
       path,
       params,
@@ -227,11 +196,11 @@ export default class Player {
     return await this.helpers.makeRequest({ method: "POST", path, data });
   }
 
-  public async sessionHistory(
-    playerId: number,
-    filterServer?: string,
-    filterOrganization?: string
-  ): Promise<GenericAPIResponse<Player>> {
+  public async sessionHistory({
+    playerId,
+    filterServer,
+    filterOrganization,
+  }: sessionHistoryParams): Promise<GenericAPIResponse<Player>> {
     const path = `/players/${playerId}/relationships/sessions`;
     const data: any = {
       include: "identifier,server",
@@ -253,13 +222,12 @@ export default class Player {
     });
   }
 
-  // TODO: find proper type
-  public async addFlag(playerId: number, flagId?: string): Promise<any> {
+  public async addFlag(playerId: number, flagId?: string) {
     const path = `/players/${playerId}/relationships/flags`;
     const data: { data: { type: string; id?: string }[] } = {
       data: [
         {
-          type: "payerFlag",
+          type: "playerFlag",
         },
       ],
     };
@@ -268,49 +236,43 @@ export default class Player {
       data.data[0].id = flagId;
     }
 
-    return await this.helpers.makeRequest({
+    return await this.helpers.makeRequest<FlagPlayer>({
       method: "POST",
       path,
       data: JSON.stringify(data),
     });
   }
 
-  // TODO: find proper type
-  public async flags(playerId: number): Promise<GenericAPIResponse<any>> {
+  public async flags(playerId: number) {
     const params = new URLSearchParams({
       "page[size]": "100",
       include: "playerFlag",
     });
 
-    return await this.helpers.makeRequest({
+    return await this.helpers.makeRequest<FlagPlayer>({
       method: "GET",
       path: `/players/${playerId}/relationships/flags`,
       params,
     });
   }
 
-  // TODO: find proper type
-  public async deleteFlag(
-    playerId: number,
-    flagId: string
-  ): Promise<GenericAPIResponse<any>> {
+  public async deleteFlag(playerId: number, flagId: string) {
     const path: string = `/players/${playerId}/relationships/flags/${flagId}`;
-    return await this.helpers.makeRequest({
+    return await this.helpers.makeRequest<FlagPlayer>({
       method: "DELETE",
       path,
       data: "",
     });
   }
 
-  // TODO: find proper type
-  public async coplayInfo(
-    playerId: number,
-    timeStart?: string,
-    timeEnd?: string,
-    playerNames?: string,
-    organizationNames?: string,
-    serverNames?: string
-  ): Promise<GenericAPIResponse<any>> {
+  public async coplayInfo({
+    playerId,
+    timeStart,
+    timeEnd,
+    playerNames,
+    organizationNames,
+    serverNames,
+  }: coplayInfoParam) {
     if (!timeStart) {
       const now = new Date();
       now.setDate(now.getDate() - 1);
@@ -323,7 +285,7 @@ export default class Player {
     const data: any = {
       "filter[period]": `${timeStart}:${timeEnd}`,
       "page[size]": "100",
-      "fields[coplayrelation]": "name,duration",
+      "fields[coplayRelation]": "name,duration",
     };
 
     if (playerNames) {
@@ -337,18 +299,14 @@ export default class Player {
     }
 
     const path: string = `/players/${playerId}/relationships/coplay`;
-    return await this.helpers.makeRequest({
+    return await this.helpers.makeRequest<CoplayRelation[]>({
       method: "GET",
       path,
       params: new URLSearchParams(data),
     });
   }
 
-  // TODO: find proper type
-  public async quickMatch(
-    identifier: string,
-    identifierType: string
-  ): Promise<GenericAPIResponse<any>> {
+  public async quickMatch(identifier: string, identifierType: string) {
     const path: string = "/players/quick-match";
     const data = JSON.stringify({
       data: [
@@ -362,16 +320,19 @@ export default class Player {
       ],
     });
 
-    return await this.helpers.makeRequest({ method: "POST", path, data });
+    return await this.helpers.makeRequest<PlayerIdentifier>({
+      method: "POST",
+      path,
+      data,
+    });
   }
 
-  // TODO: find proper type
-  public async addNote(
-    note: string,
-    organizationId: number,
-    playerId: number,
-    shared: boolean = true
-  ): Promise<GenericAPIResponse<any>> {
+  public async addNote({
+    note,
+    organizationId,
+    playerId,
+    shared = true,
+  }: addNoteParams) {
     const path = `/players/${playerId}/relationships/notes`;
 
     const data = JSON.stringify({
@@ -391,11 +352,13 @@ export default class Player {
         },
       },
     });
-    return await this.helpers.makeRequest({ method: "POST", path, data });
+    return await this.helpers.makeRequest<PlayerNote>({
+      method: "POST",
+      path,
+      data,
+    });
   }
 
-  // TODO: find proper type
-  // WARNING: untested
   public async addBan({
     reason,
     note,
@@ -406,7 +369,7 @@ export default class Player {
     orgwide = true,
     battlemetricsId,
     steamId,
-  }: AddBanArgs): Promise<any> {
+  }: AddBanParams) {
     if (expires) {
       expires = this.helpers.calculateFutureDate(expires);
     }
@@ -471,7 +434,7 @@ export default class Player {
     }
 
     if (bmid) {
-      const playerInfo = await this.info<Identifier>(Number(battlemetricsId));
+      const playerInfo = await this.info(Number(battlemetricsId));
       if (!playerInfo?.included) {
         throw new Error(`Couldn't find ${battlemetricsId}`);
       }
@@ -489,7 +452,7 @@ export default class Player {
       }
     }
 
-    return await this.helpers.makeRequest({
+    return await this.helpers.makeRequest<Ban>({
       method: "POST",
       path: `/bans`,
       data: JSON.stringify(data),
