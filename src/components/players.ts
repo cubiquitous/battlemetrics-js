@@ -76,7 +76,9 @@ export default class Player {
       include: "player,identifier",
       "page[size]": "100",
     });
-    return await this.helpers.makeRequest<PlayerIdentifier[]>({
+    return await this.helpers.makeRequest<
+      GenericAPIResponse<PlayerIdentifier[]>
+    >({
       method: "GET",
       path,
       params,
@@ -128,12 +130,11 @@ export default class Player {
       include: "identifier,server,playerCounter,playerFlag,flagPlayer",
     });
 
-    const res = await this.helpers.makeRequest<Player>({
+    return await this.helpers.makeRequest<GenericAPIResponse<Player>>({
       method: "GET",
       path,
       params,
     });
-    return res;
   }
 
   public async playHistory({
