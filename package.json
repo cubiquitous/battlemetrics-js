@@ -1,11 +1,13 @@
 {
-  "name": "battlemetrics-js",
-  "version": "1.0.0",
+  "name": "battlemetrics-wrapper",
+  "version": "0.1.0",
   "description": "a wrapper for the battlemetrics API based on GnomeSlayer's python version",
-  "main": "index.js",
+  "main": "dist/src/main.js",
+  "types": "dist/src/main.d.ts" ,
   "type": "module",
   "scripts": {
     "test": "npx tsx ./examples/examples.ts",
+    "build": "rm -rf dist && npx -p typescript tsc",
     "dev": "npx tsx ./src/main.ts"
   },
   "repository": {
@@ -22,11 +24,9 @@
   },
   "homepage": "https://github.com/cubiquitous/battlemetrics-js#readme",
   "devDependencies": {
-    "@types/node": "^20.10.4",
+    "@types/node": "^20.11.19",
     "tsx": "^4.7.0",
-    "typescript": "^5.3.3"
-  },
-  "dependencies": {
+    "typescript": "^5.3.3",
     "dotenv": "^16.3.1"
   }
 }
