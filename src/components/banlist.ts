@@ -114,7 +114,7 @@ export class BanList {
       "page[size]": "100",
     };
 
-    return await this.helpers.makeRequest({
+    return await this.helpers.makeRequest<InviteReturn>({
       method: "GET",
       path: `/ban-lists/${banlistId}/relationships/invites`,
       params: new URLSearchParams(data),
