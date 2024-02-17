@@ -122,10 +122,7 @@ export class BanList {
   }
 
   // TODO: find proper type
-  async deleteInvite(
-    banlistId: string,
-    banlistInviteId: string
-  ): Promise<object> {
+  async deleteInvite(banlistId: string, banlistInviteId: string) {
     return await this.helpers.makeRequest<object>({
       method: "DELETE",
       path: `/ban-lists/${banlistId}/relationships/invites/${banlistInviteId}`,
