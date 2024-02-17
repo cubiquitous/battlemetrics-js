@@ -1,5 +1,10 @@
 import { resolve } from "node:path";
 import Helpers from "./helpers.ts";
+import {
+  DataPoint,
+  GenericAPIResponse,
+} from "../../types/battlemetrics/battlemetricsTypes.ts";
+import { CountDataPoint } from "../../types/battlemetrics/playerTypes.ts";
 
 type searchParams = {
   search?: string;
@@ -28,6 +33,13 @@ type CreateServerParams = {
   serverPort: string;
   portQuery: string;
   game: string;
+};
+
+type countHistory = {
+  serverId: number;
+  startTime?: string;
+  endTime?: string;
+  resolution?: string;
 };
 
 export class Server {
@@ -63,6 +75,45 @@ export class Server {
       path: "/servers/${serverId}/relationships/leaderboards/time",
       params: data,
     });
+  }
+
+  public async countHistory({
+    serverId,
+    startTime,
+    endTime,
+    resolution = "raw",
+  }: countHistory) {
+    /** Player Count History
+        Documentation: https://www.battlemetrics.com/developers/documentation#link-GET-server-/servers/{(%23%2Fdefinitions%2Fserver%2Fdefinitions%2Fidentity)}/player-count-history
+        Returns an Array filled with Datapoints of the player count history.
+    */
+
+    if (!startTime) {
+      startTime = new Date(
+        new Date().getTime() - 1 * 24 * 60 * 60 * 1000 // 1 day in milliseconds;
+      ).toISOString();
+    }
+
+    if (!endTime) {
+      endTime = new Date().toISOString();
+    }
+
+    const path = `/servers/${serverId}/player-count-history`;
+
+    const params = new URLSearchParams({
+      start: startTime,
+      stop: endTime,
+      resolution,
+    });
+
+    const res = await this.helpers.makeRequest<
+      GenericAPIResponse<CountDataPoint[]>
+    >({
+      method: "GET",
+      path,
+      params,
+    });
+    return res;
   }
 
   async search({
@@ -553,7 +604,7 @@ export class Server {
     startTime?: string,
     endTime?: string,
     resolution: string = "raw"
-  ): Promise<object> {
+  ) {
     if (!startTime) {
       const now = new Date();
       startTime = new Date(
@@ -569,7 +620,7 @@ export class Server {
       stop: endTime,
       resolution: resolution,
     };
-    return await this.helpers.makeRequest({
+    return await this.helpers.makeRequest<DataPoint[]>({
       method: "GET",
       path: `/servers/${serverID}/player-count-history`,
       params: new URLSearchParams(data),
