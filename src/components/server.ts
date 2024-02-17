@@ -1,10 +1,9 @@
-import { resolve } from "node:path";
-import Helpers from "./helpers.ts";
+import Helpers from "./helpers.js";
 import {
   DataPoint,
   GenericAPIResponse,
-} from "../../types/battlemetrics/battlemetricsTypes.ts";
-import { CountDataPoint } from "../../types/battlemetrics/playerTypes.ts";
+} from "../../types/battlemetrics/battlemetricsTypes.js";
+import { CountDataPoint } from "../../types/battlemetrics/playerTypes.js";
 
 type searchParams = {
   search?: string;

@@ -2,9 +2,9 @@ import {
   GenericAPIResponse,
   DataPoint,
   Identifier,
-} from "../../types/battlemetrics/battlemetricsTypes.ts";
-import { RelatedIdentifier } from "../../types/battlemetrics/relatedIdentifier.ts";
-import Helpers from "./helpers.ts";
+} from "../../types/battlemetrics/battlemetricsTypes.js";
+import { RelatedIdentifier } from "../../types/battlemetrics/relatedIdentifier.js";
+import Helpers from "./helpers.js";
 import { URLSearchParams } from "url";
 import { randomUUID } from "node:crypto";
 import {
@@ -14,7 +14,7 @@ import {
   PlayHistory,
   PlayerIdentifier,
   PlayerNote,
-} from "../../types/battlemetrics/playerTypes.ts";
+} from "../../types/battlemetrics/playerTypes.js";
 
 type SearchOptions = {
   search?: string;

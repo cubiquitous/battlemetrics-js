@@ -1,4 +1,4 @@
-import Helpers from "./helpers.ts";
+import Helpers from "./helpers.js";
 import { randomUUID } from "node:crypto";
 
 type StatsParams = {

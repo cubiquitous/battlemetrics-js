@@ -1,13 +1,13 @@
-import { BanList } from "./components/banlist.ts";
-import { Bans } from "./components/bans.ts";
-import { Flags } from "./components/flags.ts";
+import { BanList } from "./components/banlist.js";
+import { Bans } from "./components/bans.js";
+import { Flags } from "./components/flags.js";
 import Helpers from "./components/helpers.js";
-import { Notes } from "./components/notes.ts";
+import { Notes } from "./components/notes.js";
 import Player from "./components/players.js";
-import { Session } from "./components/session.ts";
-import { GameInfo } from "./components/gameInfo.ts";
-import { Organization } from "./components/organization.ts";
-import { Server } from "./components/server.ts";
+import { Session } from "./components/session.js";
+import { GameInfo } from "./components/gameInfo.js";
+import { Organization } from "./components/organization.js";
+import { Server } from "./components/server.js";
 
 export default class BattleMetrics {
   private baseURL: string;

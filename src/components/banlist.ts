@@ -1,4 +1,11 @@
-import Helpers from "./helpers.ts";
+import {
+  Ban,
+  Banlist,
+  InviteReturn,
+  ListReturn,
+} from "../../types/battlemetrics/bans.js";
+import { GenericAPIResponse } from "../../types/battlemetrics/battlemetricsTypes.js";
+import Helpers from "./helpers.js";
 
 type createInviteParams = {
   organizationId: number;

@@ -1,4 +1,4 @@
-import Helpers from "./helpers.ts";
+import Helpers from "./helpers.js";
 
 interface InfoParams {
   filterServer?: number;
