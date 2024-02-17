@@ -2,19 +2,14 @@ import BattleMetrics from "../src/main.js";
 import { configDotenv } from "dotenv";
 
 configDotenv();
+
 // for make gnome life easier while testing
 const print = (...args: any): void => console.dir(...args, { depth: null }); // ignore this gnome
 
 type ENV = { [key: string]: string | undefined };
 
-const {
-  TOKEN,
-  ORGANIZATION_ID__ORGID,
-  USER_ID__USERID,
-  BATTLEMETRICS_ID__BMID,
-  STEAM_ID__STEAMID,
-  SERVER_ID,
-}: ENV = process.env;
+const { TOKEN, USER_ID__USERID, STEAM_ID__STEAMID, SERVER_ID }: ENV =
+  process.env;
 
 const playerId = Number(USER_ID__USERID);
 const serverId = Number(SERVER_ID);
@@ -22,7 +17,7 @@ const steamId = Number(STEAM_ID__STEAMID);
 
 const bm = new BattleMetrics(TOKEN);
 
-async function main(): Promise<void> {
+async function main() {
   // const search = await bm.player.search({ filterOnline: false });
   // print(search);
   //
