@@ -388,7 +388,7 @@ export class BanList {
       };
     };
 
-    const banList = (await this.getList(banListId)) as banListResult;
+    const banList = await this.getList(banListId);
     if (!banList) {
       return;
     }
