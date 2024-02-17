@@ -321,12 +321,12 @@ export class BanList {
     });
   }
 
-  async list(): Promise<object> {
+  async list() {
     const data = {
       include: "server,organization,owner",
       "page[size]": "100",
     };
-    return await this.helpers.makeRequest({
+    return await this.helpers.makeRequest<ListReturn>({
       method: "GET",
       path: "/ban-lists",
       params: new URLSearchParams(data),
