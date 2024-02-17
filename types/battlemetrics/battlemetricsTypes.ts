@@ -1,8 +1,13 @@
 export type ISODateString = string;
 
+export type GeneralType<U> = {
+  type: U;
+  id?: string;
+};
+
 export interface DataPoint {
   type?: string;
-  timestamp?: Date;
+  timestamp?: string;
   group?: number;
   name?: string;
   max?: number;
@@ -12,21 +17,15 @@ export interface DataPoint {
 
 export type GenericAPIResponse<T, U = any> = {
   included?: U[];
-  data: {
-    data: T;
-    links: { next?: string };
-    included: [];
-  };
+  data: T;
+  links: { next?: string };
 };
 
-export type Identifier = {
-  type: string;
-  id: string;
+export type Identifier<T> = GeneralType<"identifier"> & {
   attributes: {
-    type: string;
     identifier: string;
     lastSeen: ISODateString;
     private: boolean;
-    metadata?: null;
+    metadata?: T;
   };
 };
