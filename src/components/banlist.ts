@@ -47,6 +47,7 @@ export class BanList {
   constructor(private helpers: Helpers) {}
 
   // TODO: find proper type
+  // NON_TESTED
   async createInvite({
     organizationId,
     banlistId,
@@ -87,6 +88,7 @@ export class BanList {
   }
 
   // TODO: find proper type
+  // NON_TESTED
   async readInvitation(inviteId: string): Promise<object> {
     const data = {
       include: "banList",
@@ -214,6 +216,7 @@ export class BanList {
     });
   }
 
+  // TODO: find proper type
   async create({
     organizationId,
     action,
@@ -260,6 +263,7 @@ export class BanList {
     });
   }
 
+  // TODO: find proper type
   async acceptInvite({
     code,
     action,
@@ -308,6 +312,7 @@ export class BanList {
     });
   }
 
+  // TODO: find proper type
   async unsubscribe(
     banListId: string,
     organizationId: string
@@ -330,6 +335,7 @@ export class BanList {
     });
   }
 
+  // TODO: find proper type
   async subscribedOrgs(banListId: string): Promise<object> {
     const data = {
       include: "server,organization,owner",
@@ -342,6 +348,7 @@ export class BanList {
     });
   }
 
+  // TODO: find proper type
   async subscribers(
     banListId: string,
     organizationId: string
@@ -356,6 +363,7 @@ export class BanList {
     });
   }
 
+  // TODO: find proper type
   async read(banListId: string): Promise<object> {
     return await this.helpers.makeRequest({
       method: "GET",
@@ -364,6 +372,7 @@ export class BanList {
     });
   }
 
+  // TODO: find proper type
   async update({
     banListId,
     organizationId,
