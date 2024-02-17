@@ -417,19 +417,22 @@ export class BanList {
     });
   }
 
-  async getList(banListId?: string): Promise<object> {
+  async getList(banListId?: string) {
     const data = {
       "page[size]": "100",
       include: "organization,owner,server",
     };
-    const banLists: { id: string }[] = await this.helpers.makeRequest({
+    const banList = await this.helpers.makeRequest<Banlist | Ban>({
       method: "GET",
       path: "/ban-lists",
       params: new URLSearchParams(data),
     });
-    if (banListId) {
-      return banLists.find((banList) => banList["id"] === banListId) as object;
+
+    if (banList) {
+      return (banList as Banlist).data.find(
+        (banList) => banList.id === banListId
+      );
     }
-    return banLists;
+    return banList as Ban;
   }
 }
