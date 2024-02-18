@@ -1,4 +1,4 @@
-import BattleMetrics from "../src/main.js";
+import BattleMetrics from "battlemetrics-wrapper";
 import { configDotenv } from "dotenv";
 
 configDotenv();
