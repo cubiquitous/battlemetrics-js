@@ -18,22 +18,23 @@ async function main() {
     //
     const info = await bm.player.info(playerId);
     console.log(info);
-    //
-    const playHistory = await bm.player.playHistory({ playerId, serverId });
+
+    // since bm is an object you can also destructure a sub-class from it
+    // and it will still work
+    const { player } = bm;
+    const playHistory = await player.playHistory({ playerId, serverId });
     console.log(playHistory);
     //
-    const serverInfo = await bm.player.serverInfo(playerId, serverId);
+    const serverInfo = await player.serverInfo(playerId, serverId);
     console.log(serverInfo);
     //
-    console.log(matchIdentifiers);
-    //
-    const sessionHistory = await bm.player.sessionHistory(playerId);
+    const sessionHistory = await player.sessionHistory(playerId);
     console.log(sessionHistory);
     //
-    const addFlag = await bm.player.addFlag(playerId);
+    const addFlag = await player.addFlag(playerId);
     console.log(addFlag);
     //
-    const flags = await bm.player.flags(playerId);
+    const flags = await player.flags(playerId);
     console.log(flags);
     //
   } catch (err) {
