@@ -54,6 +54,10 @@ export default class Helpers {
         "You're being rate limited by the API. Please wait a minute before trying again."
       );
     }
+
+    if ("error" in response) {
+      throw response;
+    }
     // future reference: for dealing with edge cases
     const contentType = response.headers.get("content-type");
     // console.log({ contentType });
