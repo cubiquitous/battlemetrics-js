@@ -5,7 +5,7 @@ this is an implementation of [GnomeSlayer's](https://github.com/Gnomeslayer) [Ba
 # Install
 
 ```sh
-npm install battlemetrics-wapprer
+npm install battlemetrics-wrapper
 ```
 
 # Usage
